@@ -1,8 +1,10 @@
+import { Post } from 'src/posts/post.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -16,6 +18,7 @@ export class Tag {
     type: 'varchar',
     length: 256,
     nullable: false,
+    unique: true,
   })
   name: string;
 
@@ -36,6 +39,7 @@ export class Tag {
   @Column({
     type: 'text',
     unique: true,
+    nullable: true,
   })
   schema: string;
 
@@ -43,8 +47,14 @@ export class Tag {
     type: 'varchar',
     length: 1024,
     unique: true,
+    nullable: true,
   })
   featuredImageUrl: string;
+
+  @ManyToMany(() => Post, (post) => post.tags, {
+    onDelete: 'CASCADE',
+  })
+  posts: Post[];
 
   @CreateDateColumn()
   createDate: Date;
@@ -53,5 +63,5 @@ export class Tag {
   updateDate: Date;
 
   @DeleteDateColumn()
-  dateled: Date;
+  deletedAt: Date;
 }
